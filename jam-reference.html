@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Référence Impro 1</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap');
+
+  :root {
+    --maj: #f4a261;
+    --min: #7ec8e3;
+    --bg: #0f0f0f;
+    --surface: #141414;
+    --border: #1e1e1e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: #f0f0f0;
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+  }
+
+  /* ── SELECTOR SCREEN ── */
+  #selector-screen {
+    min-height: 100vh;
+    padding: 40px 32px 60px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 22px;
+    margin-bottom: 28px;
+  }
+
+  header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.8rem;
+    letter-spacing: 8px;
+  }
+
+  header p {
+    margin-top: 8px;
+    color: #555;
+    font-size: 0.74rem;
+    line-height: 1.9;
+    max-width: 580px;
+  }
+
+  .timing {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .timing span {
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: #2e2e2e;
+    border: 1px solid #1e1e1e;
+    padding: 4px 12px;
+    text-transform: uppercase;
+  }
+
+  .timing span strong { color: #555; }
+
+  .theory {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 560px) { .theory { grid-template-columns: 1fr; } }
+
+  .theory-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px 18px;
+  }
+
+  .theory-block h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 4px;
+    color: #444;
+    margin-bottom: 8px;
+  }
+
+  .theory-block p {
+    font-size: 0.71rem;
+    line-height: 1.85;
+    color: #555;
+  }
+
+  .theory-block p strong { color: #999; }
+
+  .section-label {
+    font-size: 0.62rem;
+    letter-spacing: 3px;
+    color: #2e2e2e;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  /* MODE TOGGLE */
+  .mode-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .mode-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    padding: 8px 22px;
+    border: 1px solid #1e1e1e;
+    background: none;
+    color: #333;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+  }
+
+  .mode-btn:hover { border-color: #444; color: #777; }
+  .mode-btn.active.maj { background: var(--maj); color: #000; border-color: var(--maj); }
+  .mode-btn.active.min { background: var(--min); color: #000; border-color: var(--min); }
+
+  /* KEY GRID */
+  .key-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 560px) { .key-grid { grid-template-columns: repeat(4, 1fr); } }
+
+  .key-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    padding: 14px 0;
+    border: 1px solid #1a1a1a;
+    background: var(--surface);
+    color: #333;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.15s;
+  }
+
+  .key-btn:hover { border-color: #444; color: #888; }
+  .key-btn.active.maj { border-color: var(--maj); color: var(--maj); background: rgba(244,162,97,0.05); }
+  .key-btn.active.min { border-color: var(--min); color: var(--min); background: rgba(126,200,227,0.05); }
+
+  .go-btn {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    padding: 14px 40px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: block;
+  }
+
+  .go-btn.maj { background: var(--maj); color: #000; }
+  .go-btn.min { background: var(--min); color: #000; }
+  .go-btn:disabled { background: #1e1e1e; color: #333; cursor: default; }
+
+  /* ── FULLSCREEN TABLE ── */
+  #fullscreen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    padding: 48px 60px;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #fullscreen.visible { display: flex; }
+
+  .fs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 36px;
+  }
+
+  .fs-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 5rem;
+    letter-spacing: 8px;
+    line-height: 1;
+  }
+
+  .fs-title.maj { color: var(--maj); }
+  .fs-title.min { color: var(--min); }
+
+  .back-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    padding: 8px 16px;
+    border: 1px solid #222;
+    background: none;
+    color: #333;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    white-space: nowrap;
+    margin-top: 8px;
+  }
+
+  .back-btn:hover { color: #888; border-color: #444; }
+
+  /* FS TABLE */
+  #fs-table {
+    border-collapse: collapse;
+    width: 100%;
+    flex: 1;
+  }
+
+  #fs-table th {
+    font-size: 0.65rem;
+    letter-spacing: 4px;
+    color: #2a2a2a;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    text-align: left;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  #fs-table td {
+    padding: 0 20px;
+    border-bottom: 1px solid #141414;
+    font-size: 1rem;
+  }
+
+  #fs-table tr:last-child td { border-bottom: none; }
+
+  #fs-table td.degree { color: #666; font-size: 0.9rem; width: 60px; }
+  #fs-table td.chord { font-weight: 700; font-size: 2.2rem; font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px; }
+  #fs-table td.chord.maj { color: var(--maj); }
+  #fs-table td.chord.min { color: var(--min); }
+  #fs-table td.quality { color: #4a4a4a; font-size: 1rem; }
+  #fs-table td.penta { text-align: center; width: 80px; font-size: 1rem; }
+  #fs-table td.penta.yes.maj { color: var(--maj); }
+  #fs-table td.penta.yes.min { color: var(--min); }
+  #fs-table td.penta.no { color: #1a1a1a; }
+
+  #fs-table tr.dim td.chord { color: #252525 !important; }
+  #fs-table tr.dim td.degree { color: #2e2e2e; }
+  #fs-table tr.dim td.quality { color: #1e1e1e; }
+
+  .fs-footer {
+    margin-top: 28px;
+    font-size: 0.65rem;
+    color: #2a2a2a;
+    letter-spacing: 1px;
+    border-top: 1px solid #161616;
+    padding-top: 16px;
+  }
+
+  .fs-footer strong { color: #444; }
+
+  /* SONGS */
+  .songs-section {
+    margin-top: 36px;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+  }
+
+  .songs-section .section-label { margin-bottom: 14px; }
+
+  .songs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .song-item {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 10px 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    text-decoration: none;
+    transition: border-color 0.15s;
+  }
+
+  .song-item:hover { border-color: #444; }
+
+  .song-title {
+    font-size: 0.82rem;
+    color: #888;
+    font-weight: 700;
+    min-width: 200px;
+  }
+
+  .song-prog {
+    font-size: 0.7rem;
+    color: #3a3a3a;
+    letter-spacing: 1px;
+    flex: 1;
+  }
+
+  .song-link {
+    font-size: 0.62rem;
+    letter-spacing: 2px;
+    color: #2a2a2a;
+    text-transform: uppercase;
+    white-space: nowrap;
+    text-decoration: none;
+    border: 1px solid #1e1e1e;
+    padding: 3px 8px;
+    transition: all 0.15s;
+  }
+
+  .song-link:hover { color: #888; border-color: #444; }
+
+  .no-songs {
+    font-size: 0.72rem;
+    color: #2a2a2a;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<!-- SELECTOR -->
+<div id="selector-screen">
+  <header>
+    <h1>Référence Impro 1</h1>
+    <p>Choisissez une tonalité et un mode, puis affichez le tableau en plein écran. L'objectif : <strong style="color:#888">réagir et s'adapter</strong>, pas mémoriser.</p>
+    <div class="timing">
+      <span><strong>~5 min</strong>&nbsp; Théorie</span>
+      <span><strong>10–15 min</strong>&nbsp; Pratique</span>
+    </div>
+  </header>
+
+  <div class="theory">
+    <div class="theory-block">
+      <h2>Les degrés</h2>
+      <p>Chaque tonalité contient 7 accords construits sur les notes de sa gamme, numérotés en chiffres romains. Le <strong>I</strong> c'est "chez soi", le <strong>V</strong> crée de la tension. Même structure peu importe la tonalité — seuls les noms changent. La majorité des chansons populaires utilisent seulement <strong>3 à 4 degrés</strong>.</p>
+    </div>
+    <div class="theory-block">
+      <h2>La pentatonique</h2>
+      <p>La gamme pentatonique contient <strong>5 notes</strong> choisies pour éviter les frictions harmoniques. Les accords marqués <strong>●</strong> sont construits directement sur ces notes — votre zone de confort. C'est la gamme la plus utilisée en musique populaire : rock, blues, pop, R&B et <strong>funk</strong>. Restez dans la penta et vous ne pouvez presque pas vous planter.</p>
+    </div>
+  </div>
+
+  <div class="section-label">Mode</div>
+  <div class="mode-row">
+    <button class="mode-btn active maj" data-mode="maj" onclick="setMode('maj')">Majeur</button>
+    <button class="mode-btn min" data-mode="min" onclick="setMode('min')">Mineur</button>
+  </div>
+
+  <div class="section-label">Tonalité</div>
+  <div class="key-grid" id="key-grid"></div>
+
+  <button class="go-btn maj" id="go-btn" onclick="showFullscreen()" disabled>Afficher</button>
+
+  <div class="songs-section" id="songs-section">
+    <div class="section-label">Exemples de chansons</div>
+    <div class="songs-list" id="songs-list">
+      <div class="no-songs">Sélectionnez une tonalité pour voir les exemples.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN -->
+<div id="fullscreen">
+  <div class="fs-header">
+    <div class="fs-title maj" id="fs-title">C Majeur</div>
+    <button class="back-btn" onclick="hideFullscreen()">← Retour</button>
+  </div>
+  <table id="fs-table">
+    <thead><tr>
+      <th>Degré</th><th>Accord</th><th>Qualité</th><th>Penta ●</th>
+    </tr></thead>
+    <tbody id="fs-tbody"></tbody>
+  </table>
+  <div class="fs-footer">
+    <strong>"Quand il y a une musique derrière, une note sur deux fonctionne toujours."</strong>
+    &nbsp;— Victor Wooten (contexte : basse)
+  </div>
+</div>
+
+<script>
+const MAJOR_KEYS = [
+  { name:'C',   chords:['C','Dm','Em','F','G','Am','Bdim'],     q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'], p:[1,0,0,1,1,1,0] },
+  { name:'G',   chords:['G','Am','Bm','C','D','Em','F♯dim'],    q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'], p:[1,1,0,0,1,1,0] },
+  { name:'D',   chords:['D','Em','F♯m','G','A','Bm','C♯dim'],   q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'], p:[1,1,1,0,1,0,0] },
+  { name:'A',   chords:['A','Bm','C♯m','D','E','F♯m','G♯dim'],  q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'], p:[1,0,1,1,1,1,0] },
+  { name:'E',   chords:['E','F♯m','G♯m','A','B','C♯m','D♯dim'], q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'], p:[1,1,1,1,0,1,0] },
+  { name:'B',   chords:['B','C♯m','D♯m','E','F♯','G♯m','A♯dim'],q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'], p:[1,1,1,0,1,1,0] },
+  { name:'F♯',  chords:['F♯','G♯m','A♯m','B','C♯','D♯m','E♯dim'],q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'],p:[1,1,1,0,1,1,0] },
+  { name:'D♭',  chords:['D♭','E♭m','Fm','G♭','A♭','B♭m','Cdim'], q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'],p:[1,0,1,1,1,0,0] },
+  { name:'A♭',  chords:['A♭','B♭m','Cm','D♭','E♭','Fm','Gdim'],  q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'],p:[1,1,0,1,1,1,0] },
+  { name:'E♭',  chords:['E♭','Fm','Gm','A♭','B♭','Cm','Ddim'],   q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'],p:[1,1,1,1,0,0,0] },
+  { name:'B♭',  chords:['B♭','Cm','Dm','E♭','F','Gm','Adim'],    q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'],p:[1,0,1,0,1,1,0] },
+  { name:'F',   chords:['F','Gm','Am','B♭','C','Dm','Edim'],     q:['majeur','mineur','mineur','majeur','majeur','mineur','diminué'],p:[1,1,0,0,1,1,0] },
+];
+
+const MINOR_KEYS = [
+  { name:'Am',  chords:['Am','Bdim','C','Dm','Em','F','G'],        q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'Em',  chords:['Em','F♯dim','G','Am','Bm','C','D'],       q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'Bm',  chords:['Bm','C♯dim','D','Em','F♯m','G','A'],      q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'F♯m', chords:['F♯m','G♯dim','A','Bm','C♯m','D','E'],     q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'C♯m', chords:['C♯m','D♯dim','E','F♯m','G♯m','A','B'],    q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'G♯m', chords:['G♯m','A♯dim','B','C♯m','D♯m','E','F♯'],   q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'Gm',  chords:['Gm','Adim','B♭','Cm','Dm','E♭','F'],      q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'Dm',  chords:['Dm','Edim','F','Gm','Am','B♭','C'],        q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'Cm',  chords:['Cm','Ddim','E♭','Fm','Gm','A♭','B♭'],      q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'Fm',  chords:['Fm','Gdim','A♭','B♭m','Cm','D♭','E♭'],     q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'B♭m', chords:['B♭m','Cdim','D♭','E♭m','Fm','G♭','A♭'],    q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+  { name:'E♭m', chords:['E♭m','Fdim','G♭','A♭m','B♭m','C♭','D♭'],   q:['mineur','diminué','majeur','mineur','mineur','majeur','majeur'], p:[1,0,1,1,1,0,1] },
+];
+
+const ROMAN_MAJ = ['I','II','III','IV','V','VI','VII°'];
+const ROMAN_MIN = ['I','II°','III','IV','V','VI','VII'];
+
+const SONGS = {
+  maj: {
+    'C':  [
+      { title: 'Let It Be – Beatles',              prog: 'I – V – VI – IV  (C – G – Am – F)',         url: 'https://www.youtube.com/watch?v=QDYfEBY9NM4' },
+      { title: 'No Woman No Cry – Bob Marley',     prog: 'I – V – VI – IV  (C – G – Am – F)',         url: 'https://youtu.be/IT8XvzIfi4U?si=8GHXBy1cIr5aOKyC' },
+      { title: 'Higher Ground – Stevie Wonder',    prog: 'I vamp funk  (C)',                           url: 'https://youtu.be/zGSxvH5i6XQ?si=ddhDrzbwvMAt9hGY' },
+    ],
+    'G':  [
+      { title: 'Sweet Home Chicago – R. Johnson',  prog: 'I – IV – V  (G – C – D)',                   url: 'https://www.youtube.com/watch?v=JumZoVVhfAU' },
+      { title: 'Knockin\' on Heaven\'s Door – Dylan', prog: 'I – V – VI – IV  (G – D – Am – C)',      url: 'https://www.youtube.com/watch?v=ln5nFRtZkXg' },
+      { title: 'Thank You – Led Zeppelin',         prog: 'I – IV – V  (G – C – D)',                   url: 'https://youtu.be/12KbOAc8vmk?si=oNOI42jZnNqee6Ex' },
+    ],
+    'D':  [
+      { title: 'Brown Eyed Girl – Van Morrison',   prog: 'I – IV – I – V  (D – G – D – A)',           url: 'https://www.youtube.com/watch?v=UmfnPCR0os8' },
+      { title: 'Proud Mary – CCR',                 prog: 'I – VI – IV – V  (D – Bm – G – A)',         url: 'https://www.youtube.com/watch?v=LRM_JIhGNEE' },
+    ],
+    'A':  [
+      { title: 'Johnny B. Goode – Chuck Berry',    prog: 'I – IV – V  (A – D – E)',                   url: 'https://www.youtube.com/watch?v=M-ELh7FHrq4' },
+      { title: 'Lay Down Sally – Eric Clapton',    prog: 'I – IV – V  (A – D – E)',                   url: 'https://www.youtube.com/watch?v=W0GFxbBOuQo' },
+      { title: 'Get Up – James Brown',             prog: 'I vamp funk  (A)',                           url: 'https://www.youtube.com/watch?v=8F4bDSPHnew' },
+    ],
+    'E':  [
+      { title: 'Whole Lotta Love – Led Zeppelin',  prog: 'I – IV  (E – A)',                           url: 'https://www.youtube.com/watch?v=HQmmM_qwG4k' },
+      { title: 'Pride and Joy – SRV',              prog: 'I – IV – V  (E – A – B)',                   url: 'https://www.youtube.com/watch?v=mFgAlmEhLXs' },
+      { title: 'Sex Machine – James Brown',        prog: 'I vamp funk  (E)',                           url: 'https://youtu.be/6KjMn-OOVHg?si=LNx-S96njMVAAech' },
+    ],
+    'F':  [
+      { title: 'Happy – Pharrell Williams',        prog: 'I  (F)',                                    url: 'https://www.youtube.com/watch?v=ZbZSe6N_BXs' },
+      { title: 'I Gotta Feeling – Black Eyed Peas',prog: 'I – IV – V – IV  (F – B♭ – C – B♭)',       url: 'https://www.youtube.com/watch?v=uSD4vsh1zDA' },
+    ],
+    'B♭': [
+      { title: 'Hit the Road Jack – Ray Charles',  prog: 'I – VII – VI – V  (B♭ – A♭ – G – F)',      url: 'https://youtu.be/uSiHqxgE2d0?si=BJGJkI88lX0bWNxr' },
+      { title: 'Sir Duke – Stevie Wonder',         prog: 'I – IV – V  (B♭ – E♭ – F)',                url: 'https://youtu.be/ETFvmkIA6S4?si=faxKRJQbqqOATH2Z' },
+    ],
+    'E♭': [
+      { title: 'Superstition – Stevie Wonder',     prog: 'I vamp funk  (E♭m)',                       url: 'https://wwiw.youtube.com/watch?v=0CFuCYNx-1g' },
+      { title: 'Play That Funky Music – Wild Cherry', prog: 'I – IV  (E♭ – A♭)',                     url: 'https://youtu.be/JTvlujbJ5vg?si=xehkf2z00WAP_Vg9' },
+    ],
+    'A♭': [
+      { title: 'Isn\'t She Lovely – Stevie Wonder', prog: 'I – IV – V  (A♭ – D♭ – E♭)',             url: 'https://youtu.be/oE56g61mW44?si=th5px_7EYAm1X11n' },
+    ],
+    'B':  [
+      { title: 'Good Times – Chic',                prog: 'I – V  (B – F♯)',                          url: 'https://youtu.be/Er9xGRolrT4?si=o8LmxD_qepGnPUXy' },
+    ],
+    'F♯': [
+      { title: 'Chameleon – Herbie Hancock',       prog: 'I – IV funk  (F♯ – B)',                    url: 'https://www.youtube.com/watch?v=UbkqE4fpvdI' },
+    ],
+  },
+  min: {
+    'Am': [
+      { title: 'Stairway to Heaven – Led Zeppelin', prog: 'I – VII – VI – V  (Am – G – F – E)',      url: 'https://www.youtube.com/watch?v=QkF3oxziUI4' },
+      { title: 'Sultans of Swing – Dire Straits',   prog: 'I – VII – VI – V  (Dm – C – B♭ – A)',    url: 'https://www.youtube.com/watch?v=0fAQhSRLQnM' },
+      { title: 'Gimme Some Lovin\' – Spencer Davis', prog: 'I – IV – V  (Am – Dm – Em)',             url: 'https://www.youtube.com/watch?v=biKOTpDvziw' },
+    ],
+    'Em': [
+      { title: 'Nothing Else Matters – Metallica',  prog: 'I – VII – VI  (Em – D – C)',              url: 'https://www.youtube.com/watch?v=tAGnKpE4NCI' },
+      { title: 'Hotel California – Eagles',         prog: 'I – V – VII – IV  (Bm – F♯ – A – E)',    url: 'https://www.youtube.com/watch?v=BciS5krYL80' },
+      { title: 'Sunshine of Your Love – Cream',     prog: 'I – VII – I  (Em – D – Em)',              url: 'https://www.youtube.com/watch?v=OQlByoPdG6c' },
+    ],
+    'Dm': [
+      { title: 'Money for Nothing – Dire Straits',  prog: 'I – III – VII  (Dm – F – C)',             url: 'https://www.youtube.com/watch?v=wTP2RUD_cL0' },
+      { title: 'Oye Como Va – Santana',             prog: 'I – IV  (Dm – G)',                        url: 'https://www.youtube.com/watch?v=Nx399OlmQY4' },
+      { title: 'Ain\'t Nobody – Rufus & Chaka Khan', prog: 'I – VII – VI – VII funk  (Dm – C – B♭ – C)', url: 'https://www.youtube.com/watch?v=d_4hGZHoHBg' },
+    ],
+    'Gm': [
+      { title: 'Smoke on the Water – Deep Purple',  prog: 'I – III – IV  (Gm – B♭ – Cm)',            url: 'https://www.youtube.com/watch?v=zUwW3MOF5-8' },
+      { title: 'Use Me – Bill Withers',             prog: 'I – IV funk  (Gm – Cm)',                  url: 'https://www.youtube.com/watch?v=pBNl-WgQlXU' },
+      { title: 'Flash Light – Parliament',          prog: 'I vamp funk  (Gm)',                       url: 'https://www.youtube.com/watch?v=tLNXNNHkGco' },
+    ],
+    'Bm': [
+      { title: 'Wish You Were Here – Pink Floyd',   prog: 'I – VII – VI – V  (Bm – A – G – F♯)',    url: 'https://www.youtube.com/watch?v=hjpF8ukSrvk' },
+      { title: 'Feeling Good – Nina Simone',        prog: 'I – V  (Bm – F♯)',                       url: 'https://www.youtube.com/watch?v=oHRNrgDIJfo' },
+    ],
+    'F♯m':[
+      { title: 'Billie Jean – Michael Jackson',     prog: 'I – II  (F♯m – G♯m)',                    url: 'https://www.youtube.com/watch?v=Zi_XLOBDo_Y' },
+      { title: 'Thriller – Michael Jackson',        prog: 'I – VI – III – VII  (F♯m – D – A – E)',  url: 'https://www.youtube.com/watch?v=sOnqjkJTMaA' },
+    ],
+    'C♯m':[
+      { title: 'Creep – Radiohead',                 prog: 'I – III – IV – IV♭  (G – B – C – Cm)',   url: 'https://www.youtube.com/watch?v=XFkzRNyygfk' },
+      { title: 'Lose Yourself – Eminem',            prog: 'I – VI – VII  (C♯m – A – B)',            url: 'https://www.youtube.com/watch?v=_Yhyp-_hX2s' },
+    ],
+    'Cm': [
+      { title: 'Superstition – Stevie Wonder',      prog: 'I vamp funk  (Cm)',                      url: 'https://www.youtube.com/watch?v=0CFuCYNx-1g' },
+      { title: 'Chameleon – Herbie Hancock',        prog: 'I – IV funk  (Cm – Fm)',                 url: 'https://youtu.be/iqomTAiRnVM?si=8CMDN21lL7u2saRz' },
+    ],
+    'G♯m':[
+      { title: 'Wherever I May Roam – Metallica',   prog: 'I vamp  (G♯m)',                         url: 'https://www.youtube.com/watch?v=HmVFoSFMFo4' },
+    ],
+    'Fm': [
+      { title: 'Another One Bites the Dust – Queen', prog: 'I – IV – VII  (Fm – B♭m – E♭)',        url: 'https://www.youtube.com/watch?v=rY0WxgSXdEE' },
+    ],
+    'B♭m':[
+      { title: 'Purple Rain – Prince',              prog: 'I – VI – III – VII  (B♭m – G♭ – D♭ – A♭)', url: 'https://www.youtube.com/watch?v=TvnYmWpD_T8' },
+    ],
+  }
+};
+
+function renderSongs() {
+  const container = document.getElementById('songs-list');
+  if (!activeKey) {
+    container.innerHTML = '<div class="no-songs">Sélectionnez une tonalité pour voir les exemples.</div>';
+    return;
+  }
+  const keySongs = (SONGS[mode] || {})[activeKey] || [];
+  if (keySongs.length === 0) {
+    container.innerHTML = '<div class="no-songs">Pas d\'exemples pour cette tonalité — à compléter !</div>';
+    return;
+  }
+  container.innerHTML = keySongs.map(s => `
+    <div class="song-item">
+      <span class="song-title">${s.title}</span>
+      <span class="song-prog">${s.prog}</span>
+      <a class="song-link" href="${s.url}" target="_blank">▶ YouTube</a>
+    </div>
+  `).join('');
+}
+
+let mode = 'maj';
+let activeKey = null;
+
+function setMode(m) {
+  mode = m;
+  activeKey = null;
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active','maj','min'));
+  document.querySelector(`.mode-btn[data-mode="${m}"]`).classList.add('active', m);
+  updateGoBtn();
+  renderKeyGrid();
+  renderSongs();
+}
+
+function renderKeyGrid() {
+  const keys = mode === 'maj' ? MAJOR_KEYS : MINOR_KEYS;
+  const cc = mode === 'maj' ? 'maj' : 'min';
+  document.getElementById('key-grid').innerHTML = keys.map(k =>
+    `<button class="key-btn ${activeKey === k.name ? 'active ' + cc : ''}"
+      onclick="selectKey('${k.name}')">${k.name}</button>`
+  ).join('');
+}
+
+function selectKey(name) {
+  activeKey = name;
+  renderKeyGrid();
+  updateGoBtn();
+  renderSongs();
+}
+
+function updateGoBtn() {
+  const btn = document.getElementById('go-btn');
+  btn.disabled = !activeKey;
+  btn.className = 'go-btn ' + (activeKey ? mode : '');
+}
+
+function showFullscreen() {
+  if (!activeKey) return;
+  const keys = mode === 'maj' ? MAJOR_KEYS : MINOR_KEYS;
+  const romans = mode === 'maj' ? ROMAN_MAJ : ROMAN_MIN;
+  const cc = mode === 'maj' ? 'maj' : 'min';
+  const key = keys.find(k => k.name === activeKey);
+  const label = mode === 'maj' ? 'Majeur' : 'Mineur';
+
+  document.getElementById('fs-title').textContent = `${key.name} ${label}`;
+  document.getElementById('fs-title').className = `fs-title ${cc}`;
+
+  document.getElementById('fs-tbody').innerHTML = key.chords.map((chord, i) => {
+    const isDim = key.q[i] === 'diminué';
+    const hasPenta = key.p[i] === 1;
+    return `<tr class="${isDim ? 'dim' : ''}">
+      <td class="degree">${romans[i]}</td>
+      <td class="chord ${cc}">${chord}</td>
+      <td class="quality">${key.q[i]}</td>
+      <td class="penta ${hasPenta ? 'yes ' + cc : 'no'}">${hasPenta ? '●' : '—'}</td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('fullscreen').classList.add('visible');
+}
+
+function hideFullscreen() {
+  document.getElementById('fullscreen').classList.remove('visible');
+}
+
+// Escape key to go back
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') hideFullscreen();
+});
+
+renderKeyGrid();
+</script>
+</body>
+</html>

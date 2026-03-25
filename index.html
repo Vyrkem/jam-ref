@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Référence Impro</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<button id="theme-toggle" aria-label="Changer le thème">☀</button>
+
+<!-- SELECTOR -->
+<div id="selector-screen">
+  <header>
+    <h1>Référence Impro</h1>
+    <p>Choisissez un mode et une tonalité, puis affichez le tableau en plein écran. L'objectif : <strong>réagir et s'adapter</strong>, pas mémoriser.</p>
+    <div class="timing">
+      <span><strong>~5 min</strong>&nbsp; Théorie</span>
+      <span><strong>10–15 min</strong>&nbsp; Pratique</span>
+    </div>
+  </header>
+
+  <div class="theory">
+    <div class="theory-block">
+      <h2>Les degrés</h2>
+      <p>Chaque tonalité contient 7 accords construits sur les notes de sa gamme, numérotés en chiffres romains. Le <strong>I</strong> c'est "chez soi", le <strong>V</strong> crée de la tension. Même structure peu importe la tonalité — seuls les noms changent. La majorité des chansons populaires utilisent seulement <strong>3 à 4 degrés</strong>.</p>
+    </div>
+    <div class="theory-block">
+      <h2>Les modes</h2>
+      <p>Les 7 modes sont des rotations de la gamme majeure. Chaque mode a une <strong>couleur sonore</strong> unique définie par une note caractéristique. Ionien = majeur classique, Éolien = mineur naturel. Les autres modes (<strong>Dorien, Phrygien, Lydien, Mixolydien, Locrien</strong>) ouvrent de nouvelles sonorités sans quitter la même famille de notes.</p>
+    </div>
+  </div>
+
+  <div class="section-label">Mode</div>
+  <div id="mode-grid"></div>
+  <div id="mode-desc"></div>
+
+  <div class="section-label">Tonalité</div>
+  <div class="key-grid" id="key-grid"></div>
+
+  <button class="go-btn" id="go-btn" disabled>Afficher</button>
+
+  <div class="songs-section">
+    <div class="section-label">Exemples de chansons</div>
+    <div class="songs-list" id="songs-list"></div>
+  </div>
+</div>
+
+<!-- FULLSCREEN -->
+<div id="fullscreen">
+  <div class="fs-header">
+    <div class="fs-title" id="fs-title"></div>
+    <button class="back-btn" id="back-btn">← Retour</button>
+  </div>
+  <table id="fs-table">
+    <thead><tr>
+      <th>Degré</th><th>Accord</th><th>Qualité</th><th>Penta ●</th>
+    </tr></thead>
+    <tbody id="fs-tbody"></tbody>
+  </table>
+  <div class="fs-footer">
+    <strong>"Quand il y a une musique derrière, une note sur deux fonctionne toujours."</strong>
+    &nbsp;— Victor Wooten (contexte : basse)
+  </div>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
